@@ -1,0 +1,651 @@
+
+<?php
+
+include("db.php");
+
+if(isset($_POST['bookBtn'])){
+
+    $fullname = $_POST['guestName'];
+    $room = $_POST['roomSelected'];
+    $nights = $_POST['nightsCount'];
+
+    $price = 50;
+
+    $total = $price * $nights;
+
+    $query = "INSERT INTO bookings(fullname, room, nights, total)
+              VALUES('$fullname','$room','$nights','$total')";
+
+if(mysqli_query($conn, $query)){
+    echo "Booking Saved Successfully!";
+}else{
+    echo mysqli_error($conn);
+}
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Ras Amba Hotel | Luxury & Heritage in Addis Ababa</title>
+  <!-- Bootstrap 5 CSS + Icons + Google Fonts -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fefcf5;
+      scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* Navbar styling */
+    .navbar {
+      background: #1e2a2e !important;
+      padding: 0.8rem 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+    }
+    .navbar-brand {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #e9c46a !important;
+    }
+    .nav-link {
+      color: #f8f9fa !important;
+      font-weight: 500;
+      margin: 0 0.5rem;
+      transition: 0.3s;
+    }
+    .nav-link:hover {
+      color: #e9c46a !important;
+      transform: translateY(-2px);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      text-shadow: 2px 2px 15px rgba(0,0,0,0.5);
+    }
+    .hero p {
+      font-size: 1.3rem;
+      max-width: 700px;
+      margin: 1.5rem auto;
+    }
+    .btn-gold {
+      background: #e9c46a;
+      color: #1e2a2e;
+      border: none;
+      padding: 12px 30px;
+      font-weight: 600;
+      border-radius: 40px;
+      transition: 0.3s;
+    }
+    .btn-gold:hover {
+      background: #d4a832;
+      transform: scale(1.03);
+      color: #1e2a2e;
+    }
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1e2a2e;
+      position: relative;
+      display: inline-block;
+      margin-bottom: 2rem;
+    }
+    .section-title:after {
+      content: '';
+      width: 70px;
+      height: 4px;
+      background: #e9c46a;
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+    }
+    .card-service {
+      border: none;
+      border-radius: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .card-service:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+    }
+    .card-service i {
+      font-size: 2.5rem;
+      color: #e9c46a;
+    }
+    .booking-card, .menu-card {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      padding: 1.5rem;
+    }
+    footer {
+      background: #1e2a2e;
+      color: #ddd;
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+    .footer-icon {
+      font-size: 1.8rem;
+      margin-right: 0.8rem;
+      color: #e9c46a;
+    }
+    .list-unstyled li {
+      margin-bottom: 0.6rem;
+    }
+    .social-icons a {
+      color: white;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      transition: 0.3s;
+    }
+    .social-icons a:hover {
+      color: #e9c46a;
+      transform: translateY(-3px);
+    }
+    .room-badge {
+      background: #e9c46a20;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-weight: 500;
+    }
+    .modal-header {
+      background: #1e2a2e;
+      color: white;
+    }
+    .btn-outline-gold {
+      border: 2px solid #e9c46a;
+      color: #e9c46a;
+      border-radius: 30px;
+    }
+    .btn-outline-gold:hover {
+      background: #e9c46a;
+      color: #1e2a2e;
+    }
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .hero p { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header Navigation -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#"><i class="fas fa-hotel me-2"></i>Ras Amba Hotel</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon bg-light rounded"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#rooms">Rooms</a></li>
+        <li class="nav-item"><a class="nav-link" href="#dining">Dining</a></li>
+        <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero" style="padding-top: 76px;">
+  <div class="container">
+    <h1>Ras Amba Hotel</h1>
+    <p>Where Ethiopian heritage meets modern elegance. Experience unmatched luxury, authentic cuisine, and world-class hospitality in the heart of Addis Ababa.</p>
+    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#bookingModal"><i class="fas fa-calendar-check me-2"></i>Book Your Stay</button>
+  </div>
+</section>
+
+<!-- Rooms Section -->
+<section id="rooms" class="py-5">
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-title">Luxurious Rooms & Suites</h2>
+      <p class="mb-5">Choose from our elegantly designed rooms, each offering comfort & stunning views.</p>
+    </div>
+    <div class="row g-4" id="roomsContainer"></div>
+  </div>
+</section>
+
+<!-- Dining & Drinks Menu (Interactive) -->
+<section id="dining" class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-title">Ethiopian & International Cuisine</h2>
+      <p class="mb-4">Savor authentic dishes, fresh drinks, and traditional coffee ceremony.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="menu-card p-4 h-100">
+          <h3><i class="fas fa-utensils me-2" style="color:#e9c46a"></i> Food Menu</h3>
+          <ul class="list-group list-group-flush" id="foodMenuList"></ul>
+          <button class="btn btn-outline-gold mt-3 w-100" id="orderFoodBtn"><i class="fas fa-shopping-cart"></i> Order Food</button>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="menu-card p-4 h-100">
+          <h3><i class="fas fa-cocktail me-2" style="color:#e9c46a"></i> Drinks Menu</h3>
+          <ul class="list-group list-group-flush" id="drinkMenuList"></ul>
+          <button class="btn btn-outline-gold mt-3 w-100" id="orderDrinkBtn"><i class="fas fa-mug-hot"></i> Order Drinks</button>
+        </div>
+      </div>
+    </div>
+    <div id="orderSummary" class="mt-4 alert alert-warning d-none" role="alert"></div>
+  </div>
+</section>
+
+<!-- Additional Services Section -->
+<section id="services" class="py-5">
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-title">Premium Services</h2>
+      <p class="mb-5">Enhance your stay with our exclusive hotel amenities.</p>
+    </div>
+    <div class="row g-4" id="servicesGrid"></div>
+    <div class="text-center mt-5">
+      <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#serviceRequestModal"><i class="fas fa-concierge-bell"></i> Request a Service</button>
+    </div>
+    <div id="selectedServicesDisplay" class="mt-4"></div>
+  </div>
+</section>
+
+<!-- About Us Section (Rich info) -->
+<section id="about" class="py-5 bg-light">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hotel History" class="img-fluid rounded-4 shadow">
+      </div>
+      <div class="col-lg-6 mt-4 mt-lg-0">
+        <h2 class="section-title text-start">About Ras Amba</h2>
+        <p class="lead">Established in early 1950s, Ras Amba Hotel is a historic landmark in Addis Ababa, embodying Ethiopian nobility and modern elegance.</p>
+        <p>Named after the revered title 'Ras', the hotel sits on a hilltop offering breathtaking views of the capital. For decades, it has hosted dignitaries, artists, and travelers seeking authentic Ethiopian hospitality. Our legacy blends vibrant traditions, timeless architecture, and world-class service — making every stay a journey through culture and comfort.</p>
+        <p><i class="fas fa-star text-warning"></i> <strong>Our mission:</strong> honor Ethiopian heritage while delivering personalized luxury and unforgettable experiences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact / Footer -->
+<footer id="contact">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5 mb-4">
+        <h4><i class="fas fa-hotel footer-icon"></i> Ras Amba Hotel</h4>
+        <p>Kirkos Sub-city, Addis Ababa, Ethiopia<br>Phone 1: +251 93 010 0371<br>Phone 2: +251-93-010-5437<br>reservationsrasambahoteladdis@gmail.com</p>
+        <div class="social-icons">
+          <a href="https://web.facebook.com/Ras.Amba.Hotel.Ethiopia/?locale=fr_FR&_rdc=1&_rdr#"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/reel/DQZLc1sglnH/"><i class="fab fa-instagram"></i></a>
+          <a href="https://et.linkedin.com/company/ras-amba-hotel"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://www.tiktok.com/@rasambahotel"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="col-md-3 mb-4">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="#rooms" class="text-decoration-none text-light">Rooms</a></li>
+          <li><a href="#dining" class="text-decoration-none text-light">Dining</a></li>
+          <li><a href="#services" class="text-decoration-none text-light">Services</a></li>
+          <li><a href="#about" class="text-decoration-none text-light">Heritage</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h5>Newsletter</h5>
+        <p>Get exclusive offers & updates</p>
+        <div class="input-group">
+          <input type="email" id="newsEmail" class="form-control" placeholder="Your email">
+          <button class="btn btn-gold" id="subNewsletter">Subscribe</button>
+        </div>
+        <small id="newsMsg" class="text-warning"></small>
+      </div>
+    </div>
+    <hr class="bg-secondary">
+    <div class="text-center pt-3">
+      <p class="mb-0">&copy; 2025 Ras Amba Hotel — Where Heritage Meets Heart. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-key"></i> Reserve Your Room</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="bookingForm" method="POST">
+          <div class="mb-3">
+            <label>Full Name</label>
+            <input type="text" id="guestName" name="guestName" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label>Room Number</label>
+            <select id="roomSelect" name="roomSelect" class="form-select"></select>
+          </div>
+          <div class="mb-3">
+            <label>Nights</label>
+            <input type="number" id="nightsCount" name="nightsCount" class="form-control" min="1" value="1">
+          </div>
+          <div id="bookingPricePreview" class="small text-success mb-2"></div>
+          <button type="submit" name="bookBtn" class="btn btn-gold w-100">Confirm Booking</button>
+        </form>
+        <div id="bookingResult" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service Request Modal (Dynamic) -->
+<div class="modal fade" id="serviceRequestModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Extra Services</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label>Select Service Type</label>
+        <select id="serviceTypeSelect" class="form-select mb-3">
+          <option value="roomService">Room Service (food/delivery fee)</option>
+          <option value="spa">Spa & Wellness ($50)</option>
+          <option value="laundry">Laundry ($15)</option>
+          <option value="valet">Valet Parking ($25)</option>
+          <option value="fitness">Fitness Center ($10)</option>
+          <option value="business">Business Services ($30)</option>
+          <option value="concierge">Concierge ($20)</option>
+        </select>
+        <div id="dynamicServiceFields"></div>
+        <button class="btn btn-gold mt-2" id="addServiceBtn">Add Service</button>
+        <div id="serviceFeedback"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> 
+<script>
+  // ---------- DATA MODELS (matching original C++ spirit) ----------
+  const roomsData = [
+    { number: 1, type: "Single", price: 50, booked: false, customer: "", nights: 0 },
+    { number: 2, type: "Double", price: 100, booked: false, customer: "", nights: 0 },
+    { number: 3, type: "Suite", price: 300, booked: false, customer: "", nights: 0 },
+    { number: 4, type: "Single", price: 50, booked: false, customer: "", nights: 0 },
+    { number: 5, type: "Double", price: 100, booked: false, customer: "", nights: 0 },
+    { number: 6, type: "Suite", price: 300, booked: false, customer: "", nights: 0 }
+  ];
+
+  const foodMenu = [
+    { id:1, name:"Pasta", price:120.5 }, { id:2, name:"Pizza", price:500 }, { id:3, name:"Burger", price:500 },
+    { id:4, name:"Salad", price:120 }, { id:5, name:"Soup", price:100 }, { id:6, name:"Shiro", price:150 },
+    { id:7, name:"Tebse", price:400 }, { id:8, name:"Kitfo", price:350 }, { id:9, name:"Beyeayinet", price:200 },
+    { id:10, name:"Agelegel", price:300 }, { id:11, name:"Home Special", price:500 }
+  ];
+  const drinkMenu = [
+    { id:1, name:"Coke", price:100 }, { id:2, name:"Pepsi", price:100 }, { id:3, name:"Orange Juice", price:80 },
+    { id:4, name:"Water", price:50 }, { id:5, name:"Coffee", price:50 }
+  ];
+
+  let selectedServicesList = []; // store objects {name, cost}
+  let totalServicesCost = 0;
+  let currentOrderCart = []; // { name, price, qty }
+
+  // Helper: Render rooms grid & update booking dropdown
+  function renderRooms() {
+    const container = document.getElementById('roomsContainer');
+    if(container) {
+      container.innerHTML = roomsData.map(room => `
+        <div class="col-md-4">
+          <div class="card-service card h-100 text-center p-3">
+            <i class="fas fa-bed fa-3x mb-2"></i>
+            <h4>${room.type} Room</h4>
+            <p class="room-badge">Room ${room.number}</p>
+            <p>$${room.price} / night</p>
+            <p class="text-muted">${room.booked ? `<span class="text-danger"><i class="fas fa-lock"></i> Booked</span>` : `<span class="text-success"><i class="fas fa-check-circle"></i> Available</span>`}</p>
+            <button class="btn btn-sm btn-outline-gold" onclick="quickBook(${room.number})" ${room.booked ? 'disabled' : ''}>Book Now</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    // update modal select
+    const selectEl = document.getElementById('roomSelect');
+    if(selectEl){
+      selectEl.innerHTML = roomsData.filter(r=>!r.booked).map(r=>`<option value="${r.number}" data-price="${r.price}" data-type="${r.type}">Room ${r.number} (${r.type}) - $${r.price}/night</option>`).join('');
+      if(selectEl.options.length===0) selectEl.innerHTML='<option disabled>No rooms available</option>';
+      selectEl.addEventListener('change', updatePricePreview);
+      updatePricePreview();
+    }
+  }
+  function updatePricePreview(){
+    const select = document.getElementById('roomSelect');
+    const nights = document.getElementById('nightsCount')?.value || 1;
+    if(select && select.selectedOptions[0]){
+      const price = parseFloat(select.selectedOptions[0].dataset.price);
+      const total = price * nights;
+      document.getElementById('bookingPricePreview').innerText = `Total: $${total.toFixed(2)}`;
+    }
+  }
+  window.quickBook = (roomNum) => {
+    const room = roomsData.find(r=>r.number===roomNum);
+    if(room && !room.booked){
+      document.getElementById('guestName').value = '';
+      document.getElementById('nightsCount').value = 1;
+      const select = document.getElementById('roomSelect');
+      for(let i=0;i<select.options.length;i++){
+        if(parseInt(select.options[i].value)===roomNum){
+          select.selectedIndex = i; break;
+        }
+      }
+      updatePricePreview();
+      const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+      modal.show();
+    }
+  };
+  // Booking Logic
+  document.getElementById('bookingForm')?.addEventListener('submit', (e)=>{
+    // e.preventDefault();
+    const guestName = document.getElementById('guestName').value.trim();
+    const roomSelect = document.getElementById('roomSelect');
+    const roomNumber = parseInt(roomSelect.value);
+    const nights = parseInt(document.getElementById('nightsCount').value);
+    if(!guestName){ alert('Enter guest name'); return; }
+    const room = roomsData.find(r=>r.number===roomNumber);
+    if(!room || room.booked){ alert('Room already taken!'); renderRooms(); return; }
+    room.booked = true;
+    room.customer = guestName;
+    room.nights = nights;
+    const totalPrice = room.price * nights;
+    document.getElementById('bookingResult').innerHTML = `<div class="alert alert-success">✅ Room ${roomNumber} booked for ${guestName}, ${nights} nights. Total: $${totalPrice.toFixed(2)}</div>`;
+    renderRooms();
+    setTimeout(()=>{
+      const modal = bootstrap.Modal.getInstance(document.getElementById('bookingModal'));
+      if(modal) modal.hide();
+      document.getElementById('bookingResult').innerHTML = '';
+    }, 2000);
+  });
+  document.getElementById('nightsCount')?.addEventListener('input', updatePricePreview);
+
+  // Display menus
+  function renderMenus(){
+    const foodList = document.getElementById('foodMenuList');
+    if(foodList) foodList.innerHTML = foodMenu.map(item=>`<li class="list-group-item d-flex justify-content-between align-items-center">${item.name} <span class="badge bg-dark rounded-pill">$${item.price.toFixed(2)}</span></li>`).join('');
+    const drinkList = document.getElementById('drinkMenuList');
+    if(drinkList) drinkList.innerHTML = drinkMenu.map(item=>`<li class="list-group-item d-flex justify-content-between align-items-center">${item.name} <span class="badge bg-dark rounded-pill">$${item.price.toFixed(2)}</span></li>`).join('');
+  }
+
+  let orderTotal = 0;
+  function addToCart(type, id){
+    let menu = type==='food' ? foodMenu : drinkMenu;
+    const item = menu.find(i=>i.id===id);
+    if(item){
+      const existing = currentOrderCart.find(i=>i.name===item.name);
+      if(existing) existing.qty+=1;
+      else currentOrderCart.push({name: item.name, price: item.price, qty:1});
+      recalcOrderSummary();
+    }
+  }
+  function recalcOrderSummary(){
+    orderTotal = currentOrderCart.reduce((sum,i)=> sum + (i.price * i.qty),0);
+    const summaryDiv = document.getElementById('orderSummary');
+    if(currentOrderCart.length===0){
+      summaryDiv.classList.add('d-none');
+      return;
+    }
+    summaryDiv.classList.remove('d-none');
+    let html = `<strong>Your Order:</strong><ul class="mb-2">`;
+    currentOrderCart.forEach(i=>{ html+=`<li>${i.name} x${i.qty} = $${(i.price*i.qty).toFixed(2)}</li>`; });
+    html+=`</ul><strong>Total: $${orderTotal.toFixed(2)}</strong><br><button class="btn btn-sm btn-success mt-2" id="confirmOrderBtn">Confirm Order</button> <button class="btn btn-sm btn-secondary mt-2" id="clearOrderBtn">Clear</button>`;
+    summaryDiv.innerHTML = html;
+    document.getElementById('confirmOrderBtn')?.addEventListener('click',()=>{
+      alert(`🎉 Order placed! Total: $${orderTotal.toFixed(2)}. Our team will deliver to your room.`);
+      currentOrderCart = [];
+      recalcOrderSummary();
+    });
+    document.getElementById('clearOrderBtn')?.addEventListener('click',()=>{
+      currentOrderCart = [];
+      recalcOrderSummary();
+    });
+  }
+
+  document.getElementById('orderFoodBtn')?.addEventListener('click',()=>{
+    let id = prompt("Enter Food Item ID (1-11):", "1");
+    if(id && !isNaN(id)) addToCart('food', parseInt(id));
+    else alert('Invalid ID');
+  });
+  document.getElementById('orderDrinkBtn')?.addEventListener('click',()=>{
+    let id = prompt("Enter Drink Item ID (1-5):", "1");
+    if(id && !isNaN(id)) addToCart('drink', parseInt(id));
+    else alert('Invalid ID');
+  });
+
+  // Services grid + dynamic modal
+  const servicesCatalog = [
+    { name:"Room Service", icon:"fa-concierge-bell", desc:"24/7 in-room dining" },
+    { name:"Spa & Wellness", icon:"fa-spa", desc:"Massage, facial, relaxation" },
+    { name:"Laundry", icon:"fa-tshirt", desc:"Express cleaning" },
+    { name:"Valet Parking", icon:"fa-car", desc:"Secure parking" },
+    { name:"Fitness Center", icon:"fa-dumbbell", desc:"Modern equipment" },
+    { name:"Business Center", icon:"fa-briefcase", desc:"Printing, meeting rooms" }
+  ];
+  function renderServicesGrid(){
+    const grid=document.getElementById('servicesGrid');
+    if(grid) grid.innerHTML=servicesCatalog.map(s=>`
+      <div class="col-md-4 col-lg-3">
+        <div class="card-service card text-center p-3 h-100" data-service="${s.name}">
+          <i class="fas ${s.icon} fa-2x"></i>
+          <h5 class="mt-2">${s.name}</h5>
+          <p class="small">${s.desc}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+  // Service request fields
+  document.getElementById('serviceTypeSelect')?.addEventListener('change',(e)=>{
+    const fieldsDiv = document.getElementById('dynamicServiceFields');
+    const val = e.target.value;
+    if(val==='roomService'){
+      fieldsDiv.innerHTML = `<label>Special request / food item</label><input type="text" id="serviceDetail" class="form-control" placeholder="e.g., Burger, time: 8pm">`;
+    } else if(val==='spa') fieldsDiv.innerHTML = `<input type="text" id="serviceDetail" class="form-control" placeholder="Treatment type (massage/facial)">`;
+    else if(val==='laundry') fieldsDiv.innerHTML = `<input type="text" id="serviceDetail" class="form-control" placeholder="Items: shirts, suits">`;
+    else if(val==='valet') fieldsDiv.innerHTML = `<input type="text" id="serviceDetail" class="form-control" placeholder="Car model & plate">`;
+    else fieldsDiv.innerHTML = `<input type="text" id="serviceDetail" class="form-control" placeholder="Additional info (optional)">`;
+  });
+  document.getElementById('addServiceBtn')?.addEventListener('click',()=>{
+    const type = document.getElementById('serviceTypeSelect').value;
+    let detail = document.getElementById('serviceDetail')?.value || "standard request";
+    let costMap = { roomService:0, spa:50, laundry:15, valet:25, fitness:10, business:30, concierge:20 };
+    let baseCost = costMap[type] || 0;
+    let serviceName = "";
+    switch(type){
+      case 'roomService': serviceName = `Room Service (${detail})`; baseCost = 5; break;
+      case 'spa': serviceName = `Spa: ${detail}`; break;
+      case 'laundry': serviceName = `Laundry: ${detail}`; break;
+      case 'valet': serviceName = `Valet: ${detail}`; break;
+      case 'fitness': serviceName = `Fitness center visit`; break;
+      case 'business': serviceName = `Business services`; break;
+      case 'concierge': serviceName = `Concierge: ${detail}`; break;
+      default: serviceName = "Extra Service";
+    }
+    selectedServicesList.push({name: serviceName, cost: baseCost});
+    totalServicesCost += baseCost;
+    updateServicesDisplay();
+    document.getElementById('serviceFeedback').innerHTML = `<div class="alert alert-success mt-2">✅ Added ${serviceName} +$${baseCost}</div>`;
+    setTimeout(()=> document.getElementById('serviceFeedback').innerHTML = '', 2000);
+  });
+  function updateServicesDisplay(){
+    const container = document.getElementById('selectedServicesDisplay');
+    if(selectedServicesList.length===0){
+      container.innerHTML = '';
+      return;
+    }
+    let html = `<div class="card p-3 shadow-sm border-0"><h5><i class="fas fa-clipboard-list"></i> Your extra services:</h5><ul>`;
+    selectedServicesList.forEach(s=>{ html+=`<li>${s.name} - $${s.cost.toFixed(2)}</li>`; });
+    html+=`</ul><h6>Total service cost: $${totalServicesCost.toFixed(2)}</h6><button class="btn btn-sm btn-gold" id="clearServicesBtn">Clear all</button></div>`;
+    container.innerHTML = html;
+    document.getElementById('clearServicesBtn')?.addEventListener('click',()=>{
+      selectedServicesList = [];
+      totalServicesCost = 0;
+      updateServicesDisplay();
+    });
+  }
+  // Newsletter
+  document.getElementById('subNewsletter')?.addEventListener('click',()=>{
+    let email = document.getElementById('newsEmail').value;
+    if(email && email.includes('@')) document.getElementById('newsMsg').innerText = '🎉 Subscribed! Enjoy exclusive deals.';
+    else document.getElementById('newsMsg').innerText = 'Valid email required.';
+  });
+  // Comment simulation in footer
+  window.commentPrompt = ()=>{
+    let cmt = prompt("Share your feedback about Ras Amba Hotel:");
+    if(cmt) alert(`Thank you! "${cmt}" – We appreciate your comment.`);
+  };
+  
+  // Initialize all
+  renderRooms();
+  renderMenus();
+  renderServicesGrid();
+  updateServicesDisplay();
+  // also add comment listener via hero or footer (bonus)
+  document.querySelector('footer .btn-gold')?.addEventListener('click',()=> commentPrompt());
+  const heroCommentBtn = document.createElement('button');
+  // extra small floating comment 
+  console.log("Frontend ready - Full Hotel experience");
+</script>
+</body>
+</html>
