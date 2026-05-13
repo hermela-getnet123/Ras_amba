@@ -17,6 +17,11 @@ if(isset($_POST['bookBtn'])){
               VALUES('$fullname','$room','$nights','$total')";
 
 if(mysqli_query($conn, $query)){
+    $updateRoom = "UPDATE rooms 
+               SET status='Booked'
+               WHERE room_number='$room'";
+
+    mysqli_query($conn, $updateRoom);
     echo "Booking Saved Successfully!";
 }else{
     echo mysqli_error($conn);
@@ -238,7 +243,50 @@ if(mysqli_query($conn, $query)){
       <h2 class="section-title">Luxurious Rooms & Suites</h2>
       <p class="mb-5">Choose from our elegantly designed rooms, each offering comfort & stunning views.</p>
     </div>
-    <div class="row g-4" id="roomsContainer"></div>
+    <div class="row g-4">
+
+      <?php
+
+      $getRooms = "SELECT * FROM rooms";
+      $result = mysqli_query($conn, $getRooms);
+
+      while($row = mysqli_fetch_assoc($result)){
+
+      ?>
+
+      <div class="col-md-4">
+        <div class="card-service card h-100 text-center p-3">
+
+          <i class="fas fa-bed fa-3x mb-2"></i>
+
+          <h4><?php echo $row['room_type']; ?> Room</h4>
+
+          <p class="room-badge">
+            Room <?php echo $row['room_number']; ?>
+          </p>
+
+          <p>
+            $<?php echo $row['price']; ?> / night
+          </p>
+
+          <p>
+            <?php
+            if($row['status'] == 'Booked'){
+                echo "<span class='text-danger'>Booked</span>";
+            }else{
+                echo "<span class='text-success'>Available</span>";
+            }
+            ?>
+          </p>
+
+        </div>
+      </div>
+
+      <?php
+      }
+      ?>
+
+    </div>
   </div>
 </section>
 
@@ -357,7 +405,30 @@ if(mysqli_query($conn, $query)){
           </div>
           <div class="mb-3">
             <label>Room Number</label>
-            <select id="roomSelect" name="roomSelect" class="form-select"></select>
+            <select id="roomSelect" name="roomSelected" class="form-select">
+
+            <?php
+
+            $availableRooms = "SELECT * FROM rooms WHERE status='Available'";
+            $result = mysqli_query($conn, $availableRooms);
+
+            while($room = mysqli_fetch_assoc($result)){
+
+            ?>
+
+            <option value="<?php echo $room['room_number']; ?>">
+
+            Room <?php echo $room['room_number']; ?>
+            (<?php echo $room['room_type']; ?>)
+            - $<?php echo $room['price']; ?>
+
+            </option>
+
+            <?php
+            }
+            ?>
+
+            </select>
           </div>
           <div class="mb-3">
             <label>Nights</label>
@@ -402,15 +473,6 @@ if(mysqli_query($conn, $query)){
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> 
 <script>
   // ---------- DATA MODELS (matching original C++ spirit) ----------
-  const roomsData = [
-    { number: 1, type: "Single", price: 50, booked: false, customer: "", nights: 0 },
-    { number: 2, type: "Double", price: 100, booked: false, customer: "", nights: 0 },
-    { number: 3, type: "Suite", price: 300, booked: false, customer: "", nights: 0 },
-    { number: 4, type: "Single", price: 50, booked: false, customer: "", nights: 0 },
-    { number: 5, type: "Double", price: 100, booked: false, customer: "", nights: 0 },
-    { number: 6, type: "Suite", price: 300, booked: false, customer: "", nights: 0 }
-  ];
-
   const foodMenu = [
     { id:1, name:"Pasta", price:120.5 }, { id:2, name:"Pizza", price:500 }, { id:3, name:"Burger", price:500 },
     { id:4, name:"Salad", price:120 }, { id:5, name:"Soup", price:100 }, { id:6, name:"Shiro", price:150 },
@@ -427,7 +489,7 @@ if(mysqli_query($conn, $query)){
   let currentOrderCart = []; // { name, price, qty }
 
   // Helper: Render rooms grid & update booking dropdown
-  function renderRooms() {
+  /*function renderRooms() {
     const container = document.getElementById('roomsContainer');
     if(container) {
       container.innerHTML = roomsData.map(room => `
@@ -451,7 +513,7 @@ if(mysqli_query($conn, $query)){
       selectEl.addEventListener('change', updatePricePreview);
       updatePricePreview();
     }
-  }
+  }*/
   function updatePricePreview(){
     const select = document.getElementById('roomSelect');
     const nights = document.getElementById('nightsCount')?.value || 1;
@@ -478,7 +540,7 @@ if(mysqli_query($conn, $query)){
     }
   };
   // Booking Logic
-  document.getElementById('bookingForm')?.addEventListener('submit', (e)=>{
+  /*document.getElementById('bookingForm')?.addEventListener('submit', (e)=>{
     // e.preventDefault();
     const guestName = document.getElementById('guestName').value.trim();
     const roomSelect = document.getElementById('roomSelect');
@@ -498,7 +560,7 @@ if(mysqli_query($conn, $query)){
       if(modal) modal.hide();
       document.getElementById('bookingResult').innerHTML = '';
     }, 2000);
-  });
+  });*/
   document.getElementById('nightsCount')?.addEventListener('input', updatePricePreview);
 
   // Display menus
@@ -624,6 +686,45 @@ if(mysqli_query($conn, $query)){
       updateServicesDisplay();
     });
   }
+  function updatePricePreview(){
+
+    const roomSelect = document.getElementById('roomSelect');
+    const nightsInput = document.getElementById('nightsCount');
+    const preview = document.getElementById('bookingPricePreview');
+
+    if(roomSelect && nightsInput){
+
+        const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+
+        const roomText = selectedOption.text;
+
+        let price = 0;
+
+        if(roomText.includes('$50')){
+            price = 50;
+        }
+        else if(roomText.includes('$100')){
+            price = 100;
+        }
+        else if(roomText.includes('$300')){
+            price = 300;
+        }
+
+        const nights = parseInt(nightsInput.value) || 1;
+
+        const total = price * nights;
+
+        preview.innerHTML = `Total: $${total}`;
+    }
+  }
+
+  document.getElementById('roomSelect')
+  ?.addEventListener('change', updatePricePreview);
+
+  document.getElementById('nightsCount')
+  ?.addEventListener('input', updatePricePreview);
+
+  updatePricePreview();
   // Newsletter
   document.getElementById('subNewsletter')?.addEventListener('click',()=>{
     let email = document.getElementById('newsEmail').value;
