@@ -523,7 +523,7 @@ if(mysqli_query($conn, $query)){
       document.getElementById('bookingPricePreview').innerText = `Total: $${total.toFixed(2)}`;
     }
   }
-  window.quickBook = (roomNum) => {
+   /*window.quickBook = (roomNum) => {
     const room = roomsData.find(r=>r.number===roomNum);
     if(room && !room.booked){
       document.getElementById('guestName').value = '';
@@ -538,7 +538,7 @@ if(mysqli_query($conn, $query)){
       const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
       modal.show();
     }
-  };
+  };*/
   // Booking Logic
   /*document.getElementById('bookingForm')?.addEventListener('submit', (e)=>{
     // e.preventDefault();
@@ -738,7 +738,7 @@ if(mysqli_query($conn, $query)){
   };
   
   // Initialize all
-  renderRooms();
+  //renderRooms();
   renderMenus();
   renderServicesGrid();
   updateServicesDisplay();
