@@ -154,6 +154,13 @@ Delete
 
 </a>
 
+<a href="edit.php?id=<?php echo $row['id']; ?>"
+class="btn btn-primary btn-sm">
+
+Edit
+
+</a>
+
 </td>
 
 </tr>
