@@ -28,7 +28,30 @@ if(mysqli_query($conn, $query)){
 }
 }
 
+if(isset($_POST['foodOrderBtn'])){
+
+    $customer = $_POST['customer_name'];
+
+    $item = $_POST['item_name'];
+
+    $category = $_POST['category'];
+
+    $quantity = $_POST['quantity'];
+
+    $price = $_POST['foodPrice'];
+
+    $total = $price * $quantity;
+
+    $query = "INSERT INTO food_orders
+    (customer_name, item_name, category, quantity, total)
+
+    VALUES
+    ('$customer','$item','$category','$quantity','$total')";
+
+    mysqli_query($conn, $query);
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -302,14 +325,12 @@ if(mysqli_query($conn, $query)){
         <div class="menu-card p-4 h-100">
           <h3><i class="fas fa-utensils me-2" style="color:#e9c46a"></i> Food Menu</h3>
           <ul class="list-group list-group-flush" id="foodMenuList"></ul>
-          <button class="btn btn-outline-gold mt-3 w-100" id="orderFoodBtn"><i class="fas fa-shopping-cart"></i> Order Food</button>
         </div>
       </div>
       <div class="col-md-6">
         <div class="menu-card p-4 h-100">
           <h3><i class="fas fa-cocktail me-2" style="color:#e9c46a"></i> Drinks Menu</h3>
           <ul class="list-group list-group-flush" id="drinkMenuList"></ul>
-          <button class="btn btn-outline-gold mt-3 w-100" id="orderDrinkBtn"><i class="fas fa-mug-hot"></i> Order Drinks</button>
         </div>
       </div>
     </div>
@@ -348,6 +369,7 @@ if(mysqli_query($conn, $query)){
     </div>
   </div>
 </section>
+
 
 <!-- Contact / Footer -->
 <footer id="contact">
@@ -443,7 +465,108 @@ if(mysqli_query($conn, $query)){
   </div>
 </div>
 
-<!-- Service Request Modal (Dynamic) -->
+
+<!-- Food Order Modal -->
+
+<div class="modal fade" id="foodOrderModal" tabindex="-1">
+
+<div class="modal-dialog">
+
+<div class="modal-content">
+
+<div class="modal-header bg-dark text-white">
+
+<h5 class="modal-title">Place Order</h5>
+
+<button type="button"
+class="btn-close btn-close-white"
+data-bs-dismiss="modal"></button>
+
+</div>
+
+<div class="modal-body">
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label>Your Name</label>
+
+<input type="text"
+name="customer_name"
+class="form-control"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Item</label>
+
+<input type="text"
+id="foodItemName"
+name="item_name"
+class="form-control"
+readonly>
+
+</div>
+
+<div class="mb-3">
+
+<label>Category</label>
+
+<input type="text"
+id="foodCategory"
+name="category"
+class="form-control"
+readonly>
+
+</div>
+
+<div class="mb-3">
+
+<label>Price</label>
+
+<input type="text"
+id="foodPrice"
+name="foodPrice"
+class="form-control"
+readonly>
+
+</div>
+
+<div class="mb-3">
+
+<label>Quantity</label>
+
+<input type="number"
+name="quantity"
+id="foodQuantity"
+class="form-control"
+value="1"
+min="1">
+
+</div>
+
+<button type="submit"
+name="foodOrderBtn"
+class="btn btn-dark w-100">
+
+Confirm Order
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Service Request Modal (Dynamic) --> orderfoodbtn
 <div class="modal fade" id="serviceRequestModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -504,7 +627,7 @@ if(mysqli_query($conn, $query)){
           </div>
         </div>
       `).join('');
-    }
+    } summary
     // update modal select
     const selectEl = document.getElementById('roomSelect');
     if(selectEl){
@@ -559,20 +682,55 @@ if(mysqli_query($conn, $query)){
       const modal = bootstrap.Modal.getInstance(document.getElementById('bookingModal'));
       if(modal) modal.hide();
       document.getElementById('bookingResult').innerHTML = '';
-    }, 2000);
+    }, 2000); input
   });*/
   document.getElementById('nightsCount')?.addEventListener('input', updatePricePreview);
 
   // Display menus
   function renderMenus(){
     const foodList = document.getElementById('foodMenuList');
-    if(foodList) foodList.innerHTML = foodMenu.map(item=>`<li class="list-group-item d-flex justify-content-between align-items-center">${item.name} <span class="badge bg-dark rounded-pill">$${item.price.toFixed(2)}</span></li>`).join('');
+    if(foodList) foodList.innerHTML = foodMenu.map(item=>
+      `
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+
+      <div>
+        <strong>${item.name}</strong><br>
+        <small>$${item.price.toFixed(2)}</small>
+      </div>
+
+      <button class="btn btn-sm btn-dark"
+      onclick="openFoodOrder('${item.name}', ${item.price}, 'Food')">
+
+      Order
+
+      </button>
+
+      </li>
+      `
+      ).join('');
     const drinkList = document.getElementById('drinkMenuList');
-    if(drinkList) drinkList.innerHTML = drinkMenu.map(item=>`<li class="list-group-item d-flex justify-content-between align-items-center">${item.name} <span class="badge bg-dark rounded-pill">$${item.price.toFixed(2)}</span></li>`).join('');
-  }
+    if(drinkList) drinkList.innerHTML = drinkMenu.map(item=>
+      `
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+
+      <div>
+        <strong>${item.name}</strong><br>
+        <small>$${item.price.toFixed(2)}</small>
+      </div>
+
+      <button class="btn btn-sm btn-dark"
+      onclick="openFoodOrder('${item.name}', ${item.price}, 'Drink')">
+
+      Order
+
+      </button>
+
+      </li>
+      `
+      ).join('');  }
 
   let orderTotal = 0;
-  function addToCart(type, id){
+  /*function addToCart(type, id){
     let menu = type==='food' ? foodMenu : drinkMenu;
     const item = menu.find(i=>i.id===id);
     if(item){
@@ -581,15 +739,15 @@ if(mysqli_query($conn, $query)){
       else currentOrderCart.push({name: item.name, price: item.price, qty:1});
       recalcOrderSummary();
     }
-  }
-  function recalcOrderSummary(){
+  }*/
+  /*function recalcOrderSummary(){
     orderTotal = currentOrderCart.reduce((sum,i)=> sum + (i.price * i.qty),0);
     const summaryDiv = document.getElementById('orderSummary');
     if(currentOrderCart.length===0){
       summaryDiv.classList.add('d-none');
       return;
-    }
-    summaryDiv.classList.remove('d-none');
+    }*/
+    /*summaryDiv.classList.remove('d-none');
     let html = `<strong>Your Order:</strong><ul class="mb-2">`;
     currentOrderCart.forEach(i=>{ html+=`<li>${i.name} x${i.qty} = $${(i.price*i.qty).toFixed(2)}</li>`; });
     html+=`</ul><strong>Total: $${orderTotal.toFixed(2)}</strong><br><button class="btn btn-sm btn-success mt-2" id="confirmOrderBtn">Confirm Order</button> <button class="btn btn-sm btn-secondary mt-2" id="clearOrderBtn">Clear</button>`;
@@ -597,15 +755,15 @@ if(mysqli_query($conn, $query)){
     document.getElementById('confirmOrderBtn')?.addEventListener('click',()=>{
       alert(`🎉 Order placed! Total: $${orderTotal.toFixed(2)}. Our team will deliver to your room.`);
       currentOrderCart = [];
-      recalcOrderSummary();
+     // recalcOrderSummary();
     });
     document.getElementById('clearOrderBtn')?.addEventListener('click',()=>{
       currentOrderCart = [];
-      recalcOrderSummary();
+     // recalcOrderSummary();
     });
-  }
+  }*/
 
-  document.getElementById('orderFoodBtn')?.addEventListener('click',()=>{
+  /*document.getElementById('orderFoodBtn')?.addEventListener('click',()=>{
     let id = prompt("Enter Food Item ID (1-11):", "1");
     if(id && !isNaN(id)) addToCart('food', parseInt(id));
     else alert('Invalid ID');
@@ -615,7 +773,7 @@ if(mysqli_query($conn, $query)){
     if(id && !isNaN(id)) addToCart('drink', parseInt(id));
     else alert('Invalid ID');
   });
-
+*/
   // Services grid + dynamic modal
   const servicesCatalog = [
     { name:"Room Service", icon:"fa-concierge-bell", desc:"24/7 in-room dining" },
@@ -716,6 +874,22 @@ if(mysqli_query($conn, $query)){
 
         preview.innerHTML = `Total: $${total}`;
     }
+  }
+
+  function openFoodOrder(name, price, category){
+
+      document.getElementById('foodItemName').value = name;
+
+      document.getElementById('foodPrice').value = price;
+
+      document.getElementById('foodCategory').value = category;
+
+      const modal =
+      new bootstrap.Modal(
+      document.getElementById('foodOrderModal')
+      );
+
+      modal.show();
   }
 
   document.getElementById('roomSelect')
