@@ -576,18 +576,64 @@ Confirm Order
       </div>
       <div class="modal-body">
         <label>Select Service Type</label>
-        <select id="serviceTypeSelect" class="form-select mb-3">
-          <option value="roomService">Room Service (food/delivery fee)</option>
-          <option value="spa">Spa & Wellness ($50)</option>
-          <option value="laundry">Laundry ($15)</option>
-          <option value="valet">Valet Parking ($25)</option>
-          <option value="fitness">Fitness Center ($10)</option>
-          <option value="business">Business Services ($30)</option>
-          <option value="concierge">Concierge ($20)</option>
+        <form method="POST">
+
+        <div class="mb-3">
+
+        <label>Your Name</label>
+
+        <input type="text"
+        name="service_customer"
+        class="form-control"
+        required>
+
+        </div>
+
+        <div class="mb-3">
+
+        <label>Select Service</label>
+
+        <select name="service_name"
+        id="serviceTypeSelect"
+        class="form-select">
+
+        <option value="Room Service">Room Service ($5)</option>
+
+        <option value="Spa">Spa & Wellness ($50)</option>
+
+        <option value="Laundry">Laundry ($15)</option>
+
+        <option value="Valet Parking">Valet Parking ($25)</option>
+
+        <option value="Fitness Center">Fitness Center ($10)</option>
+
+        <option value="Business Services">Business Services ($30)</option>
+
+        <option value="Concierge">Concierge ($20)</option>
+
         </select>
-        <div id="dynamicServiceFields"></div>
-        <button class="btn btn-gold mt-2" id="addServiceBtn">Add Service</button>
-        <div id="serviceFeedback"></div>
+
+        </div>
+
+        <div class="mb-3">
+
+        <label>Additional Details</label>
+
+        <textarea
+        name="service_details"
+        class="form-control"></textarea>
+
+        </div>
+
+        <button type="submit"
+        name="serviceBtn"
+        class="btn btn-dark w-100">
+
+        Request Service
+
+        </button>
+
+        </form>
       </div>
     </div>
   </div>
@@ -635,7 +681,7 @@ Confirm Order
       if(selectEl.options.length===0) selectEl.innerHTML='<option disabled>No rooms available</option>';
       selectEl.addEventListener('change', updatePricePreview);
       updatePricePreview();
-    }
+    } request service
   }*/
   function updatePricePreview(){
     const select = document.getElementById('roomSelect');

@@ -161,6 +161,13 @@ Edit
 
 </a>
 
+<a href="services_admin.php"
+class="btn btn-primary">
+
+Manage Services
+
+</a>
+
 </td>
 
 </tr>
